@@ -4,9 +4,6 @@ import '../components/css/payroll.css';
 import { useProfile } from '../components/profiles/profileContext.jsx';
 import timesheetData from '../components/profiles/timesheet.json';
 
-const MS_PER_DAY = 24 * 60 * 60 * 1000;
-const PAYROLL_ANCHOR_FRIDAY = new Date(2026, 0, 2); // Jan 2, 2026
-
 function normalizeDate(date) {
   return new Date(date.getFullYear(), date.getMonth(), date.getDate());
 }
@@ -46,17 +43,10 @@ function formatDate(value) {
   });
 }
 
-function getMostRecentBiweeklyFriday(referenceDate) {
+function getMostRecentFriday(referenceDate) {
   const reference = normalizeDate(referenceDate);
-  const anchor = normalizeDate(PAYROLL_ANCHOR_FRIDAY);
-  const diffDays = Math.floor((reference.getTime() - anchor.getTime()) / MS_PER_DAY);
-  const cyclesSinceAnchor = Math.floor(diffDays / 14);
-  let periodEnd = addDays(anchor, cyclesSinceAnchor * 14);
-
-  if (periodEnd > reference) {
-    periodEnd = addDays(periodEnd, -14);
-  }
-
+  const daysSinceFriday = (reference.getDay() - 5 + 7) % 7;
+  const periodEnd = addDays(reference, -daysSinceFriday);
   return periodEnd;
 }
 
@@ -69,11 +59,32 @@ function makePayStubId(profileId, periodEnd) {
 
 export function Payroll() {
   const { activeProfileId, activeProfile } = useProfile();
-  const activeTimesheet = timesheetData[activeProfileId] || timesheetData.default || {};
+  const [timesheetMap, setTimesheetMap] = React.useState(timesheetData || {});
 
-  const periodEnd = getMostRecentBiweeklyFriday(new Date());
-  const periodStart = addDays(periodEnd, -13);
-  const nextPayDate = addDays(periodEnd, 14);
+  React.useEffect(() => {
+    const fetchTimesheet = async () => {
+      try {
+        const response = await fetch('/api/timesheet');
+        if (!response.ok) {
+          return;
+        }
+        const payload = await response.json();
+        if (payload?.timesheet) {
+          setTimesheetMap(payload.timesheet);
+        }
+      } catch (error) {
+        // Keep local JSON fallback if API is unavailable.
+      }
+    };
+
+    fetchTimesheet();
+  }, []);
+
+  const activeTimesheet = timesheetMap[activeProfileId] || timesheetMap.default || {};
+
+  const periodEnd = getMostRecentFriday(new Date());
+  const periodStart = addDays(periodEnd, -6);
+  const nextPayDate = addDays(periodEnd, 7);
 
   const payrollRows = Object.entries(activeTimesheet)
     .map(([dateKey, hoursText]) => {
@@ -108,6 +119,7 @@ export function Payroll() {
         <div className="largeTitle">
           <h>Payroll</h>
         </div>
+        <p className="payrollSubtitle">Weekly payroll cycle (closed every Friday).</p>
 
         <div className="payrollGrid">
           <section className="payrollCard">

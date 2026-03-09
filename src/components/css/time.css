@@ -87,6 +87,43 @@
   background: oklch(0.4658 0.1562 255.5/1);
 }
 
+.timeHistoryHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem 1rem;
+}
+
+.timeHistoryControls {
+  display: flex;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+}
+
+.timeHistoryControls button {
+  border: 1px solid oklch(0.5198 0.1782 256.11/1);
+  background: transparent;
+  color: oklch(0.5198 0.1782 256.11/1);
+  border-radius: 8px;
+  padding: 0.4rem 0.75rem;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.timeHistoryControls button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.timeHistoryEmpty {
+  width: 100%;
+  margin: 0.75rem 0;
+  text-align: center;
+  color: #5f7068;
+  font-weight: 600;
+}
+
 .timeSuccess {
   margin-top: 0.75rem;
   color: black;

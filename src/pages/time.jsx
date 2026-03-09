@@ -59,20 +59,27 @@ function getDateKeyForToday() {
   return `${month}/${day}/${yearTwoDigits}`;
 }
 
-function getPreviousWeekRange(referenceDate = new Date()) {
+function getClosedWeekRange(referenceDate = new Date(), weekOffset = 0) {
   const today = new Date(referenceDate.getFullYear(), referenceDate.getMonth(), referenceDate.getDate());
   const dayOfWeek = today.getDay();
   const mondayOffset = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
   const startOfCurrentWeek = new Date(today);
   startOfCurrentWeek.setDate(today.getDate() - mondayOffset);
 
-  const previousWeekStart = new Date(startOfCurrentWeek);
-  previousWeekStart.setDate(startOfCurrentWeek.getDate() - 7);
+  const weekEnd = new Date(startOfCurrentWeek);
+  weekEnd.setDate(startOfCurrentWeek.getDate() - 1 - (weekOffset * 7));
 
-  const previousWeekEnd = new Date(startOfCurrentWeek);
-  previousWeekEnd.setDate(startOfCurrentWeek.getDate() - 1);
+  const weekStart = new Date(weekEnd);
+  weekStart.setDate(weekEnd.getDate() - 6);
 
-  return { previousWeekStart, previousWeekEnd };
+  return { weekStart, weekEnd };
+}
+
+function formatShortDate(date) {
+  return date.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric'
+  });
 }
 
 function formatDuration(totalSeconds) {
@@ -91,6 +98,7 @@ export function Time() {
   const [lastSessionSeconds, setLastSessionSeconds] = React.useState(0);
   const [clockStateLoaded, setClockStateLoaded] = React.useState(false);
   const [clockSessionProfileId, setClockSessionProfileId] = React.useState(null);
+  const [weekOffset, setWeekOffset] = React.useState(0);
   const [timesheetMap, setTimesheetMap] = React.useState({});
   const [saveMessage, setSaveMessage] = React.useState('');
   const [saveError, setSaveError] = React.useState('');
@@ -177,6 +185,10 @@ export function Time() {
     return () => window.clearInterval(timerId);
   }, [isClockedIn, clockInTime]);
 
+  React.useEffect(() => {
+    setWeekOffset(0);
+  }, [activeProfileId]);
+
   const appendWorkedTime = React.useCallback(async (workedSeconds) => {
     const hoursToAdd = workedSeconds / 3600;
     if (hoursToAdd <= 0) {
@@ -245,36 +257,30 @@ export function Time() {
 
   const currentTimesheet = timesheetMap[activeProfileId] || timesheetMap.default || {};
   const todayHours = Number(currentTimesheet[getDateKeyForToday()]) || 0;
-  const { previousWeekStart, previousWeekEnd } = getPreviousWeekRange();
 
-  const weeklyEntries = Object.entries(currentTimesheet)
+  const parsedEntries = Object.entries(currentTimesheet)
     .map(([dateKey, hoursText]) => ({
       dateKey,
       parsedDate: parseDateKey(dateKey),
       hours: Number(hoursText) || 0
     }))
-    .filter((entry) => {
-      if (!entry.parsedDate) {
-        return false;
-      }
-      return entry.parsedDate >= previousWeekStart && entry.parsedDate <= previousWeekEnd;
-    })
+    .filter((entry) => entry.parsedDate)
     .sort((a, b) => a.parsedDate - b.parsedDate);
 
-  const fallbackEntries = Object.entries(currentTimesheet)
-    .map(([dateKey, hoursText]) => ({
-      dateKey,
-      parsedDate: parseDateKey(dateKey),
-      hours: Number(hoursText) || 0
-    }))
-    .sort((a, b) => {
-      if (!a.parsedDate || !b.parsedDate) {
-        return 0;
-      }
-      return a.parsedDate - b.parsedDate;
-    });
+  const { weekStart, weekEnd } = getClosedWeekRange(new Date(), weekOffset);
 
-  const chartEntries = weeklyEntries.length > 0 ? weeklyEntries : fallbackEntries;
+  const weeklyEntries = parsedEntries
+    .filter((entry) => entry.parsedDate >= weekStart && entry.parsedDate <= weekEnd)
+    .sort((a, b) => a.parsedDate - b.parsedDate);
+
+  const earliestEntryDate = parsedEntries.length > 0 ? parsedEntries[0].parsedDate : null;
+  const currentPreviousWeek = getClosedWeekRange(new Date(), 0);
+  const msPerWeek = 7 * 24 * 60 * 60 * 1000;
+  const maxWeekOffset = earliestEntryDate
+    ? Math.max(0, Math.floor((currentPreviousWeek.weekStart.getTime() - earliestEntryDate.getTime()) / msPerWeek))
+    : 0;
+
+  const chartEntries = weeklyEntries;
   const totalWeekHours = chartEntries.reduce((sum, entry) => sum + entry.hours, 0);
   const maxHours = Math.max(...chartEntries.map((entry) => entry.hours), 1);
 
@@ -316,9 +322,33 @@ export function Time() {
         </div>
 
         <div className="timeCard">
-          <h className="mediumHeading">Previous Week Hours</h>
+          <div className="timeHistoryHeader">
+            <h className="mediumHeading">Weekly Hours</h>
+            <p className="timeSubtleText">
+              {formatShortDate(weekStart)} - {formatShortDate(weekEnd)}
+            </p>
+            <div className="timeHistoryControls">
+              <button
+                type="button"
+                onClick={() => setWeekOffset((current) => Math.min(current + 1, maxWeekOffset))}
+                disabled={weekOffset >= maxWeekOffset}
+              >
+                Earlier Week
+              </button>
+              <button
+                type="button"
+                onClick={() => setWeekOffset((current) => Math.max(current - 1, 0))}
+                disabled={weekOffset === 0}
+              >
+                Newer Week
+              </button>
+            </div>
+          </div>
           <p className="bodyTextMedium">Total Hours: {totalWeekHours.toFixed(2)}</p>
           <div className="timeGraph">
+            {chartEntries.length === 0 && (
+              <p className="timeHistoryEmpty">No timesheet data for this week.</p>
+            )}
             {chartEntries.map((entry) => {
               const barHeightPercent = (entry.hours / maxHours) * 100;
               return (
