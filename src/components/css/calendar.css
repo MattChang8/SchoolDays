@@ -1,0 +1,237 @@
+:root {
+  --absence-bg: #f6f9f7;
+  --absence-card: #ffffff;
+  --absence-border: #d7e4dc;
+  --absence-text: black;
+  --absence-muted: oklch(0.969 0.0155 248.07/1);
+  --absence-accent: oklch(0.708 0.1549 255.41/1);
+  --absence-accent-soft: #e3f1ea;
+}
+
+.dateLabel{
+  text-align: center;
+  font-size: 1.25rem;
+}
+
+.Sample__container {
+  margin: 1rem 0 0;
+  padding: 0;
+  text-align: center;
+}
+
+.Sample__container__content {
+  width: min(920px, 100%);
+  border-radius: 16px;
+  padding: 1rem;
+}
+
+.absenceDateInputs {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 1rem;
+  margin-top: 0.75rem;
+  margin-bottom: 0.75rem;
+  overflow-x: auto;
+}
+
+.absenceDateInputs label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  color: var(--absence-text);
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.absenceDateInputs input {
+  min-width: 220px;
+  border: 1px solid var(--absence-border);
+  border-radius: 10px;
+  padding: 0.55rem 0.75rem;
+  background-color: var(--absence-card);
+  color: var(--absence-text);
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.absenceDateInputs input:focus {
+  border-color: var(--absence-accent);
+  box-shadow: 0 0 0 3px rgba(46, 125, 91, 0.16);
+}
+
+.react-daterange-picker {
+  width: 100%;
+  color: var(--absence-text);
+  text-align: center;
+}
+
+.react-daterange-picker__wrapper {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  border-radius: 14px;
+  padding: 0.75rem 0.8rem;
+  overflow-x: auto;
+  text-align: center;
+  justify-content: center;
+}
+
+.react-daterange-picker__inputGroup {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  gap: 0.25rem;
+  font-size: 1.03rem;
+  font-weight: 700;
+  color: oklch(0.6023 0.2032 255.68/1);
+}
+
+.react-daterange-picker__inputGroup__input {
+  height: 2.2rem;
+  border: 1px solid #cdded4;
+  border-radius: 9px;
+  background: #ffffff;
+  padding: 0 0.35rem;
+  text-align: center;
+  color: black;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.react-daterange-picker__inputGroup__input:focus {
+  border-color: oklch(0.708 0.1549 255.41/1);
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.16);
+  background: #fbfffd;
+  outline: none;
+}
+
+.react-daterange-picker__inputGroup__month,
+.react-daterange-picker__inputGroup__day {
+  min-width: 3.1ch;
+}
+
+.react-daterange-picker__inputGroup__year {
+  min-width: 4.6ch;
+}
+
+.react-daterange-picker__inputGroup__divider {
+  color: oklch(0.708 0.1549 255.41/1);
+  font-weight: 700;
+}
+
+.react-daterange-picker__range-divider {
+  margin: 0 0.35rem;
+  padding: 0.22rem 0.48rem;
+  color: black;
+  font-size: 0.84rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+.react-daterange-picker__button {
+  color: var(--absence-muted);
+}
+
+.react-daterange-picker__button:enabled:hover,
+.react-daterange-picker__button:enabled:focus {
+  color: var(--absence-accent);
+}
+
+.react-daterange-picker__calendar {
+  margin-top: 0.6rem;
+  z-index: 5;
+}
+
+.react-calendar {
+  width: 100%;
+  border: 1px solid var(--absence-border);
+  border-radius: 14px;
+  background: var(--absence-card);
+  padding: 0.65rem;
+  font-size: 1rem;
+  
+}
+
+.react-calendar__navigation{
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.react-calendar__navigation button {
+  border-radius: 9px;
+  color: var(--absence-text);
+  min-height: 40px;
+  min-width: 40px;
+  font-size: 1rem;
+  margin: 2px;
+}
+
+.react-calendar__navigation button:enabled:hover,
+.react-calendar__navigation button:enabled:focus {
+  background: var(--absence-accent-soft);
+}
+
+.react-calendar__tile {
+  border-radius: 0px;
+  min-height: 40px;
+}
+
+.react-calendar__tile:enabled:hover,
+.react-calendar__tile:enabled:focus {
+  background: oklch(0.928 0.0359 250.6/1);
+}
+
+.react-calendar__tile--range {
+  background: var(--absence-accent-soft);
+  color: var(--absence-text);
+}
+
+.react-calendar__tile--rangeStart,
+.react-calendar__tile--rangeEnd,
+.react-calendar__tile--active {
+  background: var(--absence-accent);
+  color: black;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.react-calendar__month-view__weekdays__weekday abbr[title] {
+  text-decoration: none;
+  cursor: default;
+}
+
+.absenceSubmitRow {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.absenceSubmitButton {
+  border: 1px solid var(--absence-accent);
+  background: oklch(0.5198 0.1782 256.11/1);
+  color: #ffffff;
+  border-radius: 10px;
+  padding: 0.55rem 1rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.absenceSubmitButton:hover {
+  filter: brightness(0.95);
+}
+
+
+@media (max-width: 768px) {
+  .absenceDateInputs input {
+    min-width: 220px;
+  }
+
+  .Sample__container__content {
+    padding: 0.85rem;
+  }
+}

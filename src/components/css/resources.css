@@ -1,0 +1,148 @@
+.lato-font {
+    font-family: 'Lato', sans-serif;
+}
+
+.roboto-mono-font {
+    font-family: 'Roboto Mono', monospace;
+}
+
+.resource-title {
+    text-align: center;
+    font-size: calc(40px + 0.390625vw);
+    background-color: #243746;
+    color: white;
+    margin-top: 0;
+}
+
+.regional-title {
+    text-align: center;
+    font-size: calc(30px + 0.390625vw);
+    color: #243746;
+    margin-top: 0;
+}
+
+.max-width-resource {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 2000px;
+}
+
+.resource-description {
+    text-align: center;
+    font-size: calc(20px + 0.390625vw);
+    margin-left: 3%;
+    margin-right: 3%;
+}
+
+.resource-link {
+    text-align: center;
+    color: black;
+    text-decoration: none;
+    font-size: calc(15px + 0.390625vw);
+}
+
+.resource-link:hover {
+    text-decoration: underline;
+}
+
+.resource-box {
+    background-color: azure;
+}
+
+.resource-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    padding-left: 5%;
+    padding-right: 5%;
+    padding-bottom: 2%;
+}
+
+.item1-resource {
+    background-color: #dadada;
+    border-radius: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    text-align: center;
+    margin-bottom: 2%;
+}
+
+.single-resource {
+    max-width: 50%;
+    width: 100%;
+    margin: auto auto 3%;
+    background-color: #e1edf7;
+    color: black;
+    border-radius: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    text-align: center;
+    margin-bottom: 3%;
+}
+
+.single-resource-description {
+    font-size: calc(20px + 0.390625vw);
+    margin-bottom: 0;
+
+}
+
+
+@media screen and (max-width: 768px) {
+    .resource-grid {
+        grid-template-columns: 1fr;
+        gap: 1em;
+        margin-bottom: 1em;
+        padding-bottom: 0;
+    }
+
+    .single-resource {
+        max-width: 85%;
+    }
+
+    .resource-description,
+    .resource-link {
+        font-size: calc(14px + 1vw); 
+    }
+
+    .resource-title {
+        font-size: calc(30px + 0.5vw);
+        padding: 1rem;
+    }
+
+    .item1-resource {
+        padding: 0px;
+        margin-bottom: 0;
+    }
+
+    .margin-bot-0 {
+        margin-bottom: 0;
+    }
+
+    .pad-bot-0 {
+        padding-bottom: 0;
+    }
+
+    .regional-title {
+        margin-top: 8%;
+        margin-bottom: 3%;
+    }
+}
+
+@media screen and (max-width: 425px) {
+    .single-resource {
+        max-width: 90%; 
+    }
+
+    .resource-description,
+    .resource-link {
+        font-size: calc(12px + 1vw);
+    }
+
+    .item1-resource {
+        padding: 10px;
+    }
+}

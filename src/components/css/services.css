@@ -1,0 +1,133 @@
+.lato-font {
+    font-family: 'Lato', sans-serif;
+}
+
+.roboto-mono-font {
+    font-family: 'Roboto Mono', monospace;
+}
+
+.background-primary {
+    background-color: #243746;
+    color: white;
+}
+
+.background-lb {
+    background-color: #e1edf7;
+}
+
+.background-gray {
+    background-color: #2f495e;
+    color: white;
+}
+
+.services-title {
+    text-align: center;
+    font-size: calc(40px + 0.390625vw);
+    background-color: #243746;
+    color: white;
+    margin-top: 0;
+}
+
+.service-area {
+    display: flex;
+    width: 90%;
+    margin-bottom: 4rem;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 2000px;
+}
+
+.each-service {
+    margin: 10px;
+}
+
+.service-area .each-service {
+    width: 33%;
+    padding: 0;
+    border-radius: 35px;
+}
+
+.service-area .each-service .title {
+    width: 80%;
+    height: 1rem;
+    padding: 1rem 10%;
+    border-top-left-radius: 35px;
+    border-top-right-radius: 35px;
+}
+
+.content {
+    font-size: calc(12px + 0.390625vw);
+    line-height: 1.3;
+}
+
+.service-area .each-service .content {
+    padding: 10% 10%;
+}
+
+.title {
+    text-align: center;
+}
+
+.service-grid {
+    display: grid;
+    max-width: 2000px;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1rem;
+    padding: 0 10%;
+}
+
+.qb-adv-img {
+    max-height: 200px;
+    padding-bottom: 5%;
+}
+
+@media (max-width: 1024px) {
+    .service-area {
+        width: 95%;
+    }
+
+    .service-area .each-service {
+        width: 100%;
+    }
+}
+
+.service-area .each-service .content {
+    padding: 5% 10%;
+}
+
+@media (max-width: 768px) {
+    .services-title {
+        font-size: calc(30px + 0.5vw);
+        padding: 1rem;
+    }
+
+    .service-area {
+        flex-direction: column;
+        width: 100%;
+        margin: 2rem 0 auto;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .right-align{
+        align-self: auto;
+    }
+
+    .service-area .each-service {
+        width: 90%;
+        margin: 0 0 1.5rem;
+    }
+
+    .service-area .each-service {
+        width: 90%;
+        padding: 1rem;
+    }
+    .title{
+        width: 100%;
+    }
+
+    .content {
+        font-size: calc(13px + 0.5vw);
+    }
+}
+

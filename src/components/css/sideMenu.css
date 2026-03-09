@@ -1,0 +1,33 @@
+:root {
+  --app-header-height: 0px;
+}
+
+.appLayout {
+  display: flex;
+  min-height: calc(100vh - var(--app-header-height));
+  align-items: flex-start;
+}
+
+.appSidebar {
+  position: sticky;
+  top: var(--app-header-height);
+  align-self: flex-start;
+  height: calc(100vh - var(--app-header-height));
+  z-index: 1;
+}
+
+.appMain {
+  min-width: 0;
+}
+
+@media (max-width: 768px) {
+  .appSidebar {
+    position: static;
+    top: auto;
+    height: auto;
+  }
+
+  .appLayout {
+    min-height: auto;
+  }
+}

@@ -1,0 +1,48 @@
+main{
+    display: inline-block;
+    width: 100%;
+}
+
+.largeTitle{
+    font-family: Roboto;
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.largeHeading{
+    font-family: Roboto;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-top: 2rem;
+}
+
+.mediumHeading{
+    font-family: Roboto;
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-top: 2rem;
+}
+
+.bodyTextLarge{
+    font-family: Roboto;
+    font-size: 1.25rem;
+    font-weight: 400;
+}
+
+.bodyTextMedium{
+    font-family: Roboto;
+    font-size: 1.125rem;
+    font-weight: 400;
+}
+
+.menuIcons{
+    max-width: 3rem;
+    max-height: 3rem;
+}
+
+
+.paddingLeft{
+    padding-left: 2rem;
+    font-family: 'roboto';
+}

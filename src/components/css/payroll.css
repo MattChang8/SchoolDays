@@ -1,0 +1,135 @@
+.payrollPage {
+  padding-left: 2rem;
+  padding-right: 1rem;
+  padding-bottom: 2rem;
+}
+
+.payrollSubtitle {
+  color: #5f6f67;
+  margin-top: 0.5rem;
+}
+
+.payrollGrid {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(260px, 1fr));
+  gap: 1rem;
+  max-width: 980px;
+}
+
+.payrollCard {
+  background: #ffffff;
+  border: 1px solid #dbe6df;
+  border-radius: 12px;
+  padding: 1rem 1.1rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+}
+
+.payrollCardHighlight {
+  background: linear-gradient(160deg, #f4faf7 0%, oklch(0.6152 0.2108 256.1/0.11) 100%);
+}
+
+.payrollLabel {
+  margin: 0;
+  font-size: 0.9rem;
+  color: black;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.payrollValue {
+  margin: 0.35rem 0 0.25rem;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: black;
+}
+
+.payrollMuted {
+  margin: 0.15rem 0;
+  color: oklch(0.3908 0.128 256/1);
+  font-size: 0.94rem;
+}
+
+.payrollPanel {
+  background: #ffffff;
+  border: 1px solid #dbe6df;
+  border-radius: 12px;
+  padding: 1rem 1.1rem;
+  margin-top: 1rem;
+  max-width: 980px;
+}
+
+.payrollTable {
+  margin-top: 0.65rem;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.payrollTable th,
+.payrollTable td {
+  text-align: left;
+  padding: 0.65rem 0.5rem;
+  border-bottom: 1px solid #edf2ef;
+  font-size: 0.93rem;
+}
+
+.payrollTable th {
+  font-size: 0.84rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #5e7368;
+}
+
+.payrollTwoCol {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(260px, 1fr));
+  gap: 1rem;
+  max-width: 980px;
+}
+
+.payrollSummaryRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid #edf2ef;
+}
+
+.payrollSummaryTotal {
+  border-bottom: none;
+  padding-top: 0.9rem;
+  font-size: 1.02rem;
+}
+
+.payrollButton {
+  margin-top: 0.85rem;
+  border: 1px solid oklch(0.5198 0.1782 256.11/1);
+  background: oklch(0.5198 0.1782 256.11/1);
+  color: #ffffff;
+  border-radius: 8px;
+  padding: 0.55rem 0.9rem;
+  cursor: pointer;
+}
+
+.payrollButton:hover {
+  background: oklch(0.4658 0.1562 255.5/1);
+}
+
+@media (max-width: 900px) {
+  .payrollGrid,
+  .payrollTwoCol {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .payrollPage {
+    padding-left: 1rem;
+  }
+
+  .payrollTable th,
+  .payrollTable td {
+    font-size: 0.88rem;
+    padding: 0.55rem 0.3rem;
+  }
+}

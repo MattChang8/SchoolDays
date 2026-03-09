@@ -1,0 +1,161 @@
+.Nav {
+  background-color: rgb(255, 255, 255);
+  display: flex;
+  position: sticky;
+  top: 0;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px; 
+  z-index: 1200;
+  -webkit-tap-highlight-color:transparent;
+}
+
+.logoNav {
+  width: 275px;
+  padding: 15px 0px 15px 0px;
+}
+
+.header a {
+  display: inline-block;
+  font-size: 14px;
+  text-decoration: none;
+  color: black;
+  font-weight: 400;
+  min-width: 80px;
+  text-align: center; 
+  margin-right: 20px;
+}
+
+.header-profile {
+  display: inline-block;
+  font-size: 14px;
+  color: black;
+  font-weight: 600;
+  margin-right: 20px;
+}
+
+.header .home-btn {
+  margin-right: 10px;
+}
+
+.header a:last-child {
+  margin-right: 0;
+}
+
+.header a:hover {
+  font-weight: 700; 
+}
+
+
+.dropdown-content {
+  display: none;
+}
+
+.hamburger {
+  display: none;
+  font-size: 30px;
+  cursor: pointer;
+  z-index: 1300;
+  width: 20%;
+  text-align: end;
+}
+
+.closebtn {
+  display: none;
+}
+
+@media screen and (max-width: 768px) {
+  .header {
+      display: inline-block;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.5s ease-out;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      transform: translateY(-100%);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 1250;
+  }
+
+  .header.open {
+      transform: translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+  }
+
+  .header a {
+      font-size: 20px;
+      color: white;
+      padding: 15px 0;
+      width: 100%;
+      text-align: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .header-profile {
+      font-size: 18px;
+      color: white;
+      padding: 15px 0;
+      width: 100%;
+      text-align: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      margin-right: 0;
+  }
+
+  .header .home-btn {
+    margin-right: 0;
+  }
+
+  .header.open a:last-child {
+      border-bottom: none;
+  }
+
+  .hamburger {
+      display: block;
+  }
+
+  .closebtn {
+      text-align: end;
+      display: block;
+      position: absolute;
+      top: 22px;
+      right: 45px;
+      font-size: 60px;
+      color: white;
+      cursor: pointer;
+      z-index: 1300;
+      width: 50%;
+      height: 20%;
+      -webkit-tap-highlight-color:transparent;
+  }
+
+  .header a {
+    margin-right: 0px;
+  }
+
+  .logoNav {
+    width: 100%;
+    padding: 25px 0px 25px 0px;
+  }
+
+  .Nav {
+    display: inline-flex;
+    gap: 45%;
+  }
+}
+
+@media (max-width: 425px){
+  .logoNav {
+    width: 100%;
+    padding: 25px 0px 15px 0px;
+  }
+}
