@@ -301,7 +301,7 @@ export function Dashboard() {
           </div>
           <div className="dashboardClockActions">
             <button onClick={handleClockIn} disabled={isClockedIn || isSavingClock}>Clock In</button>
-            <button onClick={handleClockOut} disabled={!isClockedIn || isSavingClock}>Clock Out & Save</button>
+            <button onClick={handleClockOut} disabled={!isClockedIn || isSavingClock}>Clock Out</button>
             <Link to="/time" className="dashboardActionLink">Open Time Page</Link>
           </div>
           {clockMessage && <p className="dashboardSuccess">{clockMessage}</p>}

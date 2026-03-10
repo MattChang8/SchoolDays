@@ -1,7 +1,8 @@
 import '../components/css/workday.css';
 import '../components/css/calendar.css';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import DateRangePicker from '@wojtekmaj/react-daterange-picker';
+import { useProfile } from '../components/profiles/profileContext.jsx';
 
 
 type ValuePiece = Date | null;
@@ -19,8 +20,12 @@ function startOfCurrentMonth(): Date {
 
 
 export function Absence() {
+    const { activeProfile, activeProfileId } = useProfile();
     const [value, setValue] = useState<Value>([null, null]);
     const [activeStartDate, setActiveStartDate] = useState<Date>(startOfCurrentMonth());
+    const [timesheetMap, setTimesheetMap] = useState<Record<string, Record<string, string>>>({});
+    const [submitMessage, setSubmitMessage] = useState('');
+    const [submitError, setSubmitError] = useState('');
 
 
     const handleRangeChange = (nextValue: Value | ValuePiece | null) => {
@@ -58,6 +63,56 @@ export function Absence() {
         setActiveStartDate(nextActiveStartDate);
     };
 
+    const fetchTimesheet = React.useCallback(async () => {
+        try {
+            const response = await fetch('/api/timesheet');
+            if (!response.ok) {
+                return;
+            }
+            const payload = await response.json();
+            if (payload?.timesheet) {
+                setTimesheetMap(payload.timesheet);
+            }
+        } catch (error) {
+            setSubmitError('Unable to load timesheet data.');
+        }
+    }, []);
+
+    React.useEffect(() => {
+        fetchTimesheet();
+    }, [fetchTimesheet]);
+
+    const currentTimesheet = timesheetMap[activeProfileId] || timesheetMap.default || {};
+    const storedAccrued = Number(activeProfile?.accruedTimeOff) || 0;
+    const paidSickLeave = Number(activeProfile?.paidSickLeave) || 0;
+
+    const handleSubmitRequest = () => {
+        setSubmitMessage('');
+        setSubmitError('');
+
+        const [startDate, endDate] = value;
+        if (!startDate || !endDate) {
+            setSubmitError('Please select a start and end date for your request.');
+            return;
+        }
+
+        const start = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
+        const end = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
+        const dayCount = Math.floor((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+        const requestedHours = Math.max(0, dayCount) * 8;
+        const availableHours = storedAccrued + paidSickLeave;
+
+        if (requestedHours > availableHours) {
+            setSubmitError('Requested time off exceeds your available balance. Please contact your manager.');
+            return;
+        }
+
+        setSubmitMessage('Request submitted successfully.');
+    };
+
+    const minSelectableDate = new Date();
+    minSelectableDate.setHours(0, 0, 0, 0);
+
     return (
         <>
             <style>
@@ -74,6 +129,18 @@ export function Absence() {
                 </div>
 
                 <div>
+                    <div className='absenceBalances'>
+                        <div className='absenceBalanceCard'>
+                            <span>Accrued Time Off</span>
+                            <strong>{storedAccrued.toFixed(2)} hrs</strong>
+                            <p>Available now</p>
+                        </div>
+                        <div className='absenceBalanceCard'>
+                            <span>Paid Sick Leave</span>
+                            <strong>{paidSickLeave.toFixed(2)} hrs</strong>
+                            <p>Available now</p>
+                        </div>
+                    </div>
                     <div className='absenceDateInputs'>
                     </div>
                     <div className='Sample'>
@@ -97,6 +164,7 @@ export function Absence() {
                                     calendarIcon={null}
                                     clearIcon={null}
                                     rangeDivider="to"
+                                    minDate={minSelectableDate}
                                     calendarProps={{
                                         showDoubleView: false,
                                         view: "month",
@@ -106,8 +174,12 @@ export function Absence() {
                                     }}
                                 />
                                 <div className='absenceSubmitRow'>
-                                    <button type='button' className='absenceSubmitButton'>Submit Request</button>
+                                    <button type='button' className='absenceSubmitButton' onClick={handleSubmitRequest}>
+                                        Submit Request
+                                    </button>
                                 </div>
+                                {submitMessage && <p className='absenceSuccess'>{submitMessage}</p>}
+                                {submitError && <p className='absenceError'>{submitError}</p>}
                             </main>
                         </div>
                     </div>

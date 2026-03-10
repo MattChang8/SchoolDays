@@ -176,6 +176,12 @@
   min-height: 40px;
 }
 
+.react-calendar__tile:disabled {
+  background: #f1f3f2;
+  color: #9aa8a2;
+  cursor: not-allowed;
+}
+
 .react-calendar__tile:enabled:hover,
 .react-calendar__tile:enabled:focus {
   background: oklch(0.928 0.0359 250.6/1);
@@ -225,6 +231,57 @@ input::-webkit-inner-spin-button {
   filter: brightness(0.95);
 }
 
+.absenceBalances {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(220px, 1fr));
+  gap: 1rem;
+  margin: 0.75rem 0 1rem;
+  max-width: 720px;
+}
+
+.absenceBalanceCard {
+  border: 1px solid var(--absence-border);
+  border-radius: 12px;
+  padding: 0.75rem 0.9rem;
+  background: #ffffff;
+  box-shadow: 0 6px 16px rgba(20, 40, 32, 0.06);
+}
+
+.absenceBalanceCard span {
+  display: block;
+  font-size: 0.85rem;
+  color: #50665b;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.absenceBalanceCard strong {
+  display: block;
+  font-size: 1.25rem;
+  margin-top: 0.25rem;
+  color: #1e3b2e;
+}
+
+.absenceBalanceCard p {
+  margin: 0.35rem 0 0;
+  color: #5b7166;
+  font-size: 0.9rem;
+}
+
+.absenceSuccess {
+  margin-top: 0.75rem;
+  color: #1f6344;
+  font-weight: 600;
+  text-align: center;
+}
+
+.absenceError {
+  margin-top: 0.75rem;
+  color: #a62323;
+  font-weight: 600;
+  text-align: center;
+}
+
 
 @media (max-width: 768px) {
   .absenceDateInputs input {
@@ -233,5 +290,9 @@ input::-webkit-inner-spin-button {
 
   .Sample__container__content {
     padding: 0.85rem;
+  }
+
+  .absenceBalances {
+    grid-template-columns: 1fr;
   }
 }

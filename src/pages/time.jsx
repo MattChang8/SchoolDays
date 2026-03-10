@@ -315,7 +315,7 @@ export function Time() {
           </div>
           <div className="timeButtons">
             <button onClick={handleClockIn} disabled={isClockedIn || isSaving}>Clock In</button>
-            <button onClick={handleClockOut} disabled={!isClockedIn || isSaving}>Clock Out & Save</button>
+            <button onClick={handleClockOut} disabled={!isClockedIn || isSaving}>Clock Out</button>
           </div>
           {saveMessage && <p className="timeSuccess">{saveMessage}</p>}
           {saveError && <p className="timeError">{saveError}</p>}

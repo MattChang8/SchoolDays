@@ -2,7 +2,7 @@
   "default": {
     "id": "default",
     "firstName": "Default",
-    "lastName": "Surname",
+    "lastName": "LastName",
     "title": "Guest",
     "email": "default@schooldays.com",
     "username": "",
@@ -18,7 +18,11 @@
     "warehouseTraining": true,
     "ladderTraining": true,
     "knifeSafetyTraining": true,
-    "storeCredit": 100.95
+    "storeCredit": 100.95,
+    "accruedTimeOff": 0.0001,
+    "paidSickLeave": 40,
+    "dentalTier": "platinum",
+    "visionTier": "platinum"
   },
   "john": {
     "id": "john",
@@ -39,6 +43,10 @@
     "warehouseTraining": true,
     "ladderTraining": true,
     "knifeSafetyTraining": true,
-    "storeCredit": 1
+    "storeCredit": 1,
+    "accruedTimeOff": 8,
+    "paidSickLeave": 32,
+    "dentalTier": "gold",
+    "visionTier": "silver"
   }
 }

@@ -35,6 +35,13 @@ function formatCurrency(value) {
   }).format(value || 0);
 }
 
+const BENEFIT_TIERS = {
+  none: 0,
+  silver: 0.02,
+  gold: 0.035,
+  platinum: 0.05
+};
+
 function formatDate(value) {
   return value.toLocaleDateString('en-US', {
     month: 'short',
@@ -103,7 +110,13 @@ export function Payroll() {
   const hourlyRate = Number(activeProfile?.hourlyRate) || 0;
   const grossPay = totalHours * hourlyRate;
   const estimatedTaxes = grossPay * 0.18;
-  const netPay = grossPay - estimatedTaxes;
+  const netBeforeBenefits = grossPay - estimatedTaxes;
+  const dentalTier = activeProfile?.dentalTier || 'none';
+  const visionTier = activeProfile?.visionTier || 'none';
+  const dentalPercent = BENEFIT_TIERS[dentalTier] ?? 0;
+  const visionPercent = BENEFIT_TIERS[visionTier] ?? 0;
+  const benefitDeduction = netBeforeBenefits * (dentalPercent + visionPercent);
+  const netPay = netBeforeBenefits - benefitDeduction;
 
   const employeeName = [activeProfile?.firstName, activeProfile?.lastName].filter(Boolean).join(' ') || 'Employee';
   const employeeTitle = activeProfile?.title || 'Team Member';
@@ -187,6 +200,10 @@ export function Payroll() {
             <div className="payrollSummaryRow">
               <span>Estimated Taxes (18%)</span>
               <strong>-{formatCurrency(estimatedTaxes)}</strong>
+            </div>
+            <div className="payrollSummaryRow">
+              <span>Benefits ({dentalTier} dental, {visionTier} vision)</span>
+              <strong>-{formatCurrency(benefitDeduction)}</strong>
             </div>
             <div className="payrollSummaryRow payrollSummaryTotal">
               <span>Estimated Net Pay</span>

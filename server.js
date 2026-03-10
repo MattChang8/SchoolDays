@@ -95,6 +95,7 @@ app.put('/api/timesheet/:id', async (req, res) => {
     }
 
     const timesheet = await readTimesheet();
+    const profiles = await readProfiles();
     const profileTimesheet = timesheet[profileId] || {};
 
     const existingHours = Number(profileTimesheet[dateKey]) || 0;
@@ -102,13 +103,22 @@ app.put('/api/timesheet/:id', async (req, res) => {
     profileTimesheet[dateKey] = Number(nextHours.toFixed(2)).toString();
     timesheet[profileId] = profileTimesheet;
 
+    if (profiles[profileId]) {
+      const currentAccrued = Number(profiles[profileId].accruedTimeOff) || 0;
+      const accrualIncrement = parsedHoursToAdd / 30;
+      const nextAccrued = currentAccrued + accrualIncrement;
+      profiles[profileId].accruedTimeOff = Number(nextAccrued.toFixed(4));
+      await writeProfiles(profiles);
+    }
+
     await writeTimesheet(timesheet);
 
     return res.json({
       timesheet,
       profileTimesheet,
       dateKey,
-      totalHoursForDate: profileTimesheet[dateKey]
+      totalHoursForDate: profileTimesheet[dateKey],
+      profiles
     });
   } catch (error) {
     return res.status(500).json({ error: 'Failed to update timesheet.' });
