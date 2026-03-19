@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import '../components/css/workday.css';
 import '../components/css/dashboard.css';
 import { useProfile } from '../components/profiles/profileContext.jsx';
+import { appendTimesheetHours, fetchTimesheetData } from '../components/profiles/dataStore.js';
 
 const TRAINING_KEYS = [
   { key: 'warehouseTraining', label: 'Warehouse Safety' },
@@ -102,7 +103,7 @@ function getMostRecentBiweeklyFriday(referenceDate) {
 }
 
 export function Dashboard() {
-  const { activeProfileId, activeProfile } = useProfile();
+  const { activeProfileId, activeProfile, refreshProfiles } = useProfile();
   const displayName = activeProfile
     ? [activeProfile.firstName, activeProfile.lastName].filter(Boolean).join(' ')
     : 'Default User';
@@ -111,7 +112,6 @@ export function Dashboard() {
   const [isClockedIn, setIsClockedIn] = React.useState(false);
   const [clockInTime, setClockInTime] = React.useState(null);
   const [elapsedSeconds, setElapsedSeconds] = React.useState(0);
-  const [lastSessionSeconds, setLastSessionSeconds] = React.useState(0);
   const [clockStateLoaded, setClockStateLoaded] = React.useState(false);
   const [clockSessionProfileId, setClockSessionProfileId] = React.useState(null);
   const [isSavingClock, setIsSavingClock] = React.useState(false);
@@ -119,16 +119,12 @@ export function Dashboard() {
   const [clockError, setClockError] = React.useState('');
 
   const fetchTimesheet = React.useCallback(async () => {
-    try {
-      const response = await fetch('/api/timesheet');
-      if (!response.ok) {
-        return;
-      }
-      const payload = await response.json();
-      if (payload?.timesheet) {
-        setTimesheetMap(payload.timesheet);
-      }
-    } catch (error) {
+    const result = await fetchTimesheetData();
+    if (result?.timesheet) {
+      setTimesheetMap(result.timesheet);
+      return;
+    }
+    if (!result) {
       setClockError('Unable to load timesheet data.');
     }
   }, []);
@@ -210,43 +206,36 @@ export function Dashboard() {
     setClockError('');
 
     try {
-      const response = await fetch(`/api/timesheet/${activeProfileId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          dateKey: getDateKeyForToday(),
-          hoursToAdd
-        })
+      const result = await appendTimesheetHours(activeProfileId, {
+        dateKey: getDateKeyForToday(),
+        hoursToAdd
       });
 
-      const payload = await response.json();
-      if (!response.ok) {
-        setClockError(payload?.error || 'Could not save clock session.');
+      if (!result?.ok) {
+        setClockError(result?.error || 'Could not save clock session.');
         setIsSavingClock(false);
         return;
       }
 
-      if (payload?.timesheet) {
-        setTimesheetMap(payload.timesheet);
+      if (result?.timesheet) {
+        setTimesheetMap(result.timesheet);
       } else {
         fetchTimesheet();
       }
 
+      await refreshProfiles();
       setClockMessage(`Saved ${hoursToAdd.toFixed(2)} hour(s) to today's timesheet.`);
     } catch (error) {
-      setClockError('Could not reach timesheet API.');
+      setClockError('Could not save clock session.');
     } finally {
       setIsSavingClock(false);
     }
-  }, [activeProfileId, fetchTimesheet]);
+  }, [activeProfileId, fetchTimesheet, refreshProfiles]);
 
   const handleClockIn = () => {
     const now = new Date();
     setClockInTime(now);
     setElapsedSeconds(0);
-    setLastSessionSeconds(0);
     setClockMessage('');
     setClockError('');
     setIsClockedIn(true);
@@ -258,7 +247,6 @@ export function Dashboard() {
     }
 
     const workedSeconds = Math.max(0, Math.floor((Date.now() - clockInTime.getTime()) / 1000));
-    setLastSessionSeconds(workedSeconds);
     setIsClockedIn(false);
     setClockInTime(null);
     setElapsedSeconds(0);
@@ -298,6 +286,7 @@ export function Dashboard() {
           <div className="dashboardClockHeader">
             <h className="mediumHeading">Clock In/Out</h>
             <p>{isClockedIn ? `Clocked in at ${clockInTime?.toLocaleTimeString()}` : 'Ready to clock in'}</p>
+            <p>Current session: {new Date(elapsedSeconds * 1000).toISOString().slice(11, 19)}</p>
           </div>
           <div className="dashboardClockActions">
             <button onClick={handleClockIn} disabled={isClockedIn || isSavingClock}>Clock In</button>

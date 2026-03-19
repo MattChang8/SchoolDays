@@ -1,5 +1,6 @@
 import React from 'react';
 import profiles from './profiles.json';
+import { fetchProfilesData, readProfilesLocal, updateProfileData } from './dataStore.js';
 
 const ProfileContext = React.createContext(null);
 
@@ -8,27 +9,19 @@ const JOHN_PROFILE_ID = 'john';
 
 export function ProfileProvider({ children }) {
   const [activeProfileId, setActiveProfileId] = React.useState(DEFAULT_PROFILE_ID);
-  const [profileMap, setProfileMap] = React.useState(profiles || {});
+  const [profileMap, setProfileMap] = React.useState(readProfilesLocal() || profiles || {});
 
   const resetToDefaultProfile = React.useCallback(() => {
     setActiveProfileId(DEFAULT_PROFILE_ID);
   }, []);
 
   const refreshProfiles = React.useCallback(async () => {
-    try {
-      const response = await fetch('/api/profiles');
-      if (!response.ok) {
-        return null;
-      }
-      const payload = await response.json();
-      if (payload?.profiles) {
-        setProfileMap(payload.profiles);
-        return payload.profiles;
-      }
-      return null;
-    } catch (error) {
-      return null;
+    const result = await fetchProfilesData();
+    if (result?.profiles) {
+      setProfileMap(result.profiles);
+      return result.profiles;
     }
+    return null;
   }, []);
 
   React.useEffect(() => {
@@ -38,35 +31,20 @@ export function ProfileProvider({ children }) {
   const activeProfile = profileMap[activeProfileId] || profileMap[DEFAULT_PROFILE_ID];
 
   const updateActiveProfile = React.useCallback(async ({ updates, currentPassword }) => {
-    try {
-      const response = await fetch(`/api/profiles/${activeProfileId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ updates, currentPassword })
-      });
+    const result = await updateProfileData(activeProfileId, { updates, currentPassword });
 
-      const payload = await response.json();
-
-      if (!response.ok) {
-        return {
-          ok: false,
-          error: payload?.error || 'Failed to update profile.'
-        };
-      }
-
-      if (payload?.profiles) {
-        setProfileMap(payload.profiles);
-      }
-
-      return { ok: true };
-    } catch (error) {
+    if (!result?.ok) {
       return {
         ok: false,
-        error: 'Could not reach the profile API.'
+        error: result?.error || 'Failed to update profile.'
       };
     }
+
+    if (result?.profiles) {
+      setProfileMap(result.profiles);
+    }
+
+    return { ok: true };
   }, [activeProfileId]);
 
   const value = React.useMemo(

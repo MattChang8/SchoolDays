@@ -2,6 +2,7 @@ import '../components/css/workday.css';
 import '../components/css/time.css';
 import React from 'react';
 import { useProfile } from '../components/profiles/profileContext.jsx';
+import { appendTimesheetHours, fetchTimesheetData } from '../components/profiles/dataStore.js';
 
 function getClockStorageKey(profileId) {
   return `schooldays.timeclock.${profileId || 'default'}`;
@@ -91,7 +92,7 @@ function formatDuration(totalSeconds) {
 }
 
 export function Time() {
-  const { activeProfileId } = useProfile();
+  const { activeProfileId, refreshProfiles } = useProfile();
   const [isClockedIn, setIsClockedIn] = React.useState(false);
   const [clockInTime, setClockInTime] = React.useState(null);
   const [elapsedSeconds, setElapsedSeconds] = React.useState(0);
@@ -105,16 +106,12 @@ export function Time() {
   const [isSaving, setIsSaving] = React.useState(false);
 
   const fetchTimesheet = React.useCallback(async () => {
-    try {
-      const response = await fetch('/api/timesheet');
-      if (!response.ok) {
-        return;
-      }
-      const payload = await response.json();
-      if (payload?.timesheet) {
-        setTimesheetMap(payload.timesheet);
-      }
-    } catch (error) {
+    const result = await fetchTimesheetData();
+    if (result?.timesheet) {
+      setTimesheetMap(result.timesheet);
+      return;
+    }
+    if (!result) {
       setSaveError('Unable to connect to timesheet service.');
     }
   }, []);
@@ -200,37 +197,31 @@ export function Time() {
     setSaveError('');
 
     try {
-      const response = await fetch(`/api/timesheet/${activeProfileId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          dateKey: getDateKeyForToday(),
-          hoursToAdd
-        })
+      const result = await appendTimesheetHours(activeProfileId, {
+        dateKey: getDateKeyForToday(),
+        hoursToAdd
       });
 
-      const payload = await response.json();
-      if (!response.ok) {
-        setSaveError(payload?.error || 'Could not save time entry.');
+      if (!result?.ok) {
+        setSaveError(result?.error || 'Could not save time entry.');
         setIsSaving(false);
         return;
       }
 
-      if (payload?.timesheet) {
-        setTimesheetMap(payload.timesheet);
+      if (result?.timesheet) {
+        setTimesheetMap(result.timesheet);
       } else {
         fetchTimesheet();
       }
 
+      await refreshProfiles();
       setSaveMessage(`Saved ${hoursToAdd.toFixed(2)} hour(s) to today's timesheet.`);
     } catch (error) {
-      setSaveError('Could not reach timesheet API.');
+      setSaveError('Could not save time entry.');
     } finally {
       setIsSaving(false);
     }
-  }, [activeProfileId, fetchTimesheet]);
+  }, [activeProfileId, fetchTimesheet, refreshProfiles]);
 
   const handleClockIn = () => {
     const now = new Date();

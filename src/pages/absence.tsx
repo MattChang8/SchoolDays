@@ -20,10 +20,9 @@ function startOfCurrentMonth(): Date {
 
 
 export function Absence() {
-    const { activeProfile, activeProfileId } = useProfile();
+    const { activeProfile } = useProfile();
     const [value, setValue] = useState<Value>([null, null]);
     const [activeStartDate, setActiveStartDate] = useState<Date>(startOfCurrentMonth());
-    const [timesheetMap, setTimesheetMap] = useState<Record<string, Record<string, string>>>({});
     const [submitMessage, setSubmitMessage] = useState('');
     const [submitError, setSubmitError] = useState('');
 
@@ -63,26 +62,6 @@ export function Absence() {
         setActiveStartDate(nextActiveStartDate);
     };
 
-    const fetchTimesheet = React.useCallback(async () => {
-        try {
-            const response = await fetch('/api/timesheet');
-            if (!response.ok) {
-                return;
-            }
-            const payload = await response.json();
-            if (payload?.timesheet) {
-                setTimesheetMap(payload.timesheet);
-            }
-        } catch (error) {
-            setSubmitError('Unable to load timesheet data.');
-        }
-    }, []);
-
-    React.useEffect(() => {
-        fetchTimesheet();
-    }, [fetchTimesheet]);
-
-    const currentTimesheet = timesheetMap[activeProfileId] || timesheetMap.default || {};
     const storedAccrued = Number(activeProfile?.accruedTimeOff) || 0;
     const paidSickLeave = Number(activeProfile?.paidSickLeave) || 0;
 

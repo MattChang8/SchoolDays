@@ -2,7 +2,7 @@ import React from 'react';
 import '../components/css/workday.css';
 import '../components/css/payroll.css';
 import { useProfile } from '../components/profiles/profileContext.jsx';
-import timesheetData from '../components/profiles/timesheet.json';
+import { fetchTimesheetData, readTimesheetLocal } from '../components/profiles/dataStore.js';
 
 function normalizeDate(date) {
   return new Date(date.getFullYear(), date.getMonth(), date.getDate());
@@ -66,21 +66,13 @@ function makePayStubId(profileId, periodEnd) {
 
 export function Payroll() {
   const { activeProfileId, activeProfile } = useProfile();
-  const [timesheetMap, setTimesheetMap] = React.useState(timesheetData || {});
+  const [timesheetMap, setTimesheetMap] = React.useState(readTimesheetLocal());
 
   React.useEffect(() => {
     const fetchTimesheet = async () => {
-      try {
-        const response = await fetch('/api/timesheet');
-        if (!response.ok) {
-          return;
-        }
-        const payload = await response.json();
-        if (payload?.timesheet) {
-          setTimesheetMap(payload.timesheet);
-        }
-      } catch (error) {
-        // Keep local JSON fallback if API is unavailable.
+      const result = await fetchTimesheetData();
+      if (result?.timesheet) {
+        setTimesheetMap(result.timesheet);
       }
     };
 
