@@ -62,8 +62,9 @@ export function Login(){
                 {statusMessage && <p>{statusMessage}</p>}
             </form>
             <br />
-            <div className='forgot'>
+            <div className='tooltip'>
                 <p>Forgot Password?</p>
+                <span class='tooltiptext'>Either navigate to a page or put 'guest1' in both fields</span>
             </div>
 
         </>

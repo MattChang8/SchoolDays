@@ -79,11 +79,17 @@ function getRequiredModules(profile) {
   return TRAINING_MODULES.filter((module) => Boolean(profile?.[module.key]));
 }
 
+function getFinishedModules(profile) {
+  return TRAINING_MODULES.filter((module) => profile && profile[module.key] === false);
+}
+
 export function Training() {
   const { activeProfile, updateActiveProfile } = useProfile();
   const requiredModules = getRequiredModules(activeProfile);
+  const finishedModules = getFinishedModules(activeProfile);
 
   const [activeModuleKey, setActiveModuleKey] = React.useState(null);
+  const [isReviewOnly, setIsReviewOnly] = React.useState(false);
   const [step, setStep] = React.useState('list');
   const [answers, setAnswers] = React.useState({});
   const [resultMessage, setResultMessage] = React.useState('');
@@ -92,8 +98,9 @@ export function Training() {
 
   const activeModule = TRAINING_MODULES.find((module) => module.key === activeModuleKey) || null;
 
-  const beginModule = (moduleKey) => {
+  const beginModule = (moduleKey, reviewOnly = false) => {
     setActiveModuleKey(moduleKey);
+    setIsReviewOnly(reviewOnly);
     setStep('video');
     setAnswers({});
     setResultMessage('');
@@ -155,6 +162,7 @@ export function Training() {
   const returnToModuleList = () => {
     setStep('list');
     setActiveModuleKey(null);
+    setIsReviewOnly(false);
     setAnswers({});
     setResultMessage('');
     setErrorMessage('');
@@ -172,29 +180,58 @@ export function Training() {
         </div>
 
         {step === 'list' && (
-          <section className="trainingPanel">
-            <h2 className="mediumHeading">Required Modules</h2>
-            {requiredModules.length === 0 && (
-              <p className="bodyTextMedium">No required training modules right now.</p>
-            )}
-            {requiredModules.length > 0 && (
-              <div className="trainingCards">
-                {requiredModules.map((module) => (
-                  <button key={module.key} className="trainingCard" onClick={() => beginModule(module.key)} type="button">
-                    <h3>{module.title}</h3>
-                    <p>{module.description}</p>
-                    <span>Open Module</span>
-                  </button>
-                ))}
-              </div>
-            )}
-          </section>
+          <>
+            <section className="trainingPanel">
+              <h2 className="mediumHeading">Required Modules</h2>
+              {requiredModules.length === 0 && (
+                <p className="bodyTextMedium">No required training modules right now.</p>
+              )}
+              {requiredModules.length > 0 && (
+                <div className="trainingCards">
+                  {requiredModules.map((module) => (
+                    <button key={module.key} className="trainingCard" onClick={() => beginModule(module.key)} type="button">
+                      <h3>{module.title}</h3>
+                      <p>{module.description}</p>
+                      <span>Open Module</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </section>
+
+            <section className="trainingPanel">
+              <h2 className="mediumHeading">Finished Modules</h2>
+              {finishedModules.length === 0 && (
+                <p className="bodyTextMedium">No finished modules yet.</p>
+              )}
+              {finishedModules.length > 0 && (
+                <div className="trainingCards">
+                  {finishedModules.map((module) => (
+                    <button
+                      key={module.key}
+                      className="trainingCard trainingCardComplete"
+                      onClick={() => beginModule(module.key, true)}
+                      type="button"
+                    >
+                      <h3>{module.title}</h3>
+                      <p>{module.description}</p>
+                      <span>Rewatch Video</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </section>
+          </>
         )}
 
         {activeModule && step === 'video' && (
           <section className="trainingPanel">
             <h2 className="mediumHeading">{activeModule.title}</h2>
-            <p className="bodyTextMedium">Watch the video, then click Next to start the quiz.</p>
+            <p className="bodyTextMedium">
+              {isReviewOnly
+                ? 'This module is already complete. You can rewatch the video, but the quiz is locked.'
+                : 'Watch the video, then click Next to start the quiz.'}
+            </p>
             <div className="trainingVideoWrap">
               <iframe
                 src={activeModule.videoEmbedUrl}
@@ -206,7 +243,7 @@ export function Training() {
             </div>
             <div className="trainingActions">
               <button type="button" onClick={returnToModuleList}>Back to Modules</button>
-              <button type="button" onClick={goToQuiz}>Next</button>
+              {!isReviewOnly && <button type="button" onClick={goToQuiz}>Next</button>}
             </div>
           </section>
         )}

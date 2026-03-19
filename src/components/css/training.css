@@ -53,6 +53,17 @@
   box-shadow: 0 8px 18px rgba(0, 0, 0, 0.14);
 }
 
+.trainingCardComplete {
+  background: linear-gradient(165deg, #fbfcfd 0%, #eef2f8 100%);
+  border-color: #d6deec;
+}
+
+.trainingCardComplete h3,
+.trainingCardComplete p,
+.trainingCardComplete span {
+  color: #334764;
+}
+
 .trainingVideoWrap {
   margin-top: 0.75rem;
   width: 100%;

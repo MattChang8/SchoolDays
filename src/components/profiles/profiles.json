@@ -19,7 +19,7 @@
     "ladderTraining": true,
     "knifeSafetyTraining": true,
     "storeCredit": 100.95,
-    "accruedTimeOff": 0.0001,
+    "accruedTimeOff": 2.0001,
     "paidSickLeave": 40,
     "dentalTier": "platinum",
     "visionTier": "platinum"
