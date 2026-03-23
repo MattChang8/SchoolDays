@@ -63,7 +63,7 @@ export function Login(){
             </form>
             <br />
             <div className='tooltip'>
-                <p>Forgot Password?</p>
+                <span className='forgot'>Forgot Password?</span>
                 <span class='tooltiptext'>Either navigate to a page or put 'guest1' in both fields</span>
             </div>
 

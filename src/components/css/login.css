@@ -12,6 +12,8 @@
 
 .tooltip{
     text-align: center;
+    margin: auto;
+    display: table;
 }
 
 .tooltiptext{

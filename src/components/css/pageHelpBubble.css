@@ -1,0 +1,108 @@
+.pageHelpShell {
+  bottom: 1.4rem;
+  position: fixed;
+  right: 1.4rem;
+  z-index: 1250;
+}
+
+.pageHelpBubble {
+  background: linear-gradient(135deg, #0f2e66 0%, #1c5cab 100%);
+  border: none;
+  border-radius: 999px;
+  box-shadow: 0 18px 34px rgba(10, 28, 59, 0.28);
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  min-width: 118px;
+  padding: 0.95rem 1.15rem;
+  transition: transform 0.16s ease, box-shadow 0.16s ease;
+}
+
+.pageHelpBubble:hover {
+  box-shadow: 0 20px 38px rgba(10, 28, 59, 0.34);
+  transform: translateY(-2px);
+}
+
+.pageHelpPanel {
+  background: linear-gradient(180deg, #f8fbff 0%, #edf4ff 100%);
+  border: 1px solid rgba(15, 46, 102, 0.1);
+  border-radius: 22px;
+  box-shadow: 0 26px 64px rgba(10, 28, 59, 0.28);
+  color: #15355f;
+  margin-bottom: 0.8rem;
+  max-width: 360px;
+  padding: 1rem 1rem 0.95rem;
+}
+
+.pageHelpPanelHeader {
+  align-items: flex-start;
+  display: flex;
+  gap: 0.75rem;
+  justify-content: space-between;
+  margin-bottom: 0.85rem;
+}
+
+.pageHelpEyebrow {
+  color: #57739d;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  margin: 0 0 0.2rem;
+  text-transform: uppercase;
+}
+
+.pageHelpTitle {
+  color: #0f2e66;
+  font-size: 1.15rem;
+  margin: 0;
+}
+
+.pageHelpClose {
+  background: #dbe8f7;
+  border: none;
+  border-radius: 999px;
+  color: #15355f;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 0.6rem 0.85rem;
+}
+
+.pageHelpBody p {
+  color: #2f4f7b;
+  font-size: 0.93rem;
+  line-height: 1.55;
+  margin: 0 0 0.75rem;
+}
+
+.pageHelpBody p:last-child {
+  margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+  .pageHelpShell {
+    bottom: 1rem;
+    right: 1rem;
+  }
+
+  .pageHelpPanel {
+    max-width: min(340px, calc(100vw - 2rem));
+  }
+}
+
+@media (max-width: 520px) {
+  .pageHelpShell {
+    left: 1rem;
+    right: 1rem;
+  }
+
+  .pageHelpBubble {
+    width: 100%;
+  }
+
+  .pageHelpPanel {
+    max-width: none;
+  }
+}
