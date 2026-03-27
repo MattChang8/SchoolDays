@@ -4,57 +4,31 @@ import { useProfile } from "./profiles/profileContext.jsx";
 
 import './css/footer.css';
 
-const BENEFIT_TIER_OPTIONS = ['none', 'silver', 'gold', 'platinum'];
-
 const FIELD_LABELS = {
-    firstName: 'First Name',
-    lastName: 'Last Name',
     title: 'Job Title',
     email: 'Work Email',
     username: 'Username',
     password: 'Password',
-    dob: 'Date of Birth',
-    homePhone: 'Home Phone',
-    cellPhone: 'Cell Phone',
-    homeAddress: 'Home Address',
-    emergencyContactName: 'Emergency Contact Name',
-    emergencyContactNumber: 'Emergency Contact Number',
-    personalEmail: 'Personal Email',
-    hourlyRate: 'Hourly Rate',
     warehouseTraining: 'Warehouse Training Required',
     ladderTraining: 'Ladder Training Required',
     knifeSafetyTraining: 'Knife Safety Training Required',
-    storeCredit: 'Store Credit',
     accruedTimeOff: 'Accrued Time Off',
-    paidSickLeave: 'Paid Sick Leave',
-    dentalTier: 'Dental Tier',
-    visionTier: 'Vision Tier'
+    paidSickLeave: 'Paid Sick Leave'
 };
 
 const FIELD_ORDER = [
-    'firstName',
-    'lastName',
     'title',
     'email',
     'username',
     'password',
-    'dob',
-    'homePhone',
-    'cellPhone',
-    'homeAddress',
-    'emergencyContactName',
-    'emergencyContactNumber',
-    'personalEmail',
-    'hourlyRate',
     'warehouseTraining',
     'ladderTraining',
     'knifeSafetyTraining',
-    'storeCredit',
     'accruedTimeOff',
-    'paidSickLeave',
-    'dentalTier',
-    'visionTier'
+    'paidSickLeave'
 ];
+
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function labelForField(fieldKey) {
     if (FIELD_LABELS[fieldKey]) {
@@ -67,10 +41,6 @@ function labelForField(fieldKey) {
 }
 
 function coerceFieldValue(fieldKey, nextValue, currentValue) {
-    if (fieldKey === 'dentalTier' || fieldKey === 'visionTier') {
-        return nextValue;
-    }
-
     if (typeof currentValue === 'boolean') {
         return Boolean(nextValue);
     }
@@ -83,6 +53,52 @@ function coerceFieldValue(fieldKey, nextValue, currentValue) {
     return nextValue;
 }
 
+function validateDraftValues(draftValues, activeProfileId) {
+    const nextErrors = {};
+    const title = String(draftValues.title || '').trim();
+    const email = String(draftValues.email || '').trim();
+    const username = String(draftValues.username || '').trim();
+    const password = String(draftValues.password || '');
+    const accruedTimeOff = Number(draftValues.accruedTimeOff);
+    const paidSickLeave = Number(draftValues.paidSickLeave);
+
+    if (!title) {
+        nextErrors.title = 'Job title is required.';
+    }
+
+    if (!email) {
+        nextErrors.email = 'Work email is required.';
+    } else if (!EMAIL_PATTERN.test(email)) {
+        nextErrors.email = 'Enter a valid work email.';
+    }
+
+    if (activeProfileId !== 'default' && !username) {
+        nextErrors.username = 'Username is required for employee profiles.';
+    } else if (username && /\s/.test(username)) {
+        nextErrors.username = 'Username cannot contain spaces.';
+    } else if (username && username.length < 3) {
+        nextErrors.username = 'Username must be at least 3 characters.';
+    }
+
+    if (username && password.length < 4) {
+        nextErrors.password = 'Password must be at least 4 characters.';
+    }
+
+    if (!Number.isFinite(accruedTimeOff)) {
+        nextErrors.accruedTimeOff = 'Accrued time off must be a valid number.';
+    } else if (accruedTimeOff < 0) {
+        nextErrors.accruedTimeOff = 'Accrued time off cannot be negative.';
+    }
+
+    if (!Number.isFinite(paidSickLeave)) {
+        nextErrors.paidSickLeave = 'Paid sick leave must be a valid number.';
+    } else if (paidSickLeave < 0) {
+        nextErrors.paidSickLeave = 'Paid sick leave cannot be negative.';
+    }
+
+    return nextErrors;
+}
+
 const Footer = () => {
     const { activeProfile, activeProfileId, updateActiveProfile } = useProfile();
     const [isConsoleOpen, setIsConsoleOpen] = React.useState(false);
@@ -90,23 +106,29 @@ const Footer = () => {
     const [isSaving, setIsSaving] = React.useState(false);
     const [saveMessage, setSaveMessage] = React.useState('');
     const [saveError, setSaveError] = React.useState('');
+    const [validationErrors, setValidationErrors] = React.useState({});
 
     const editableKeys = React.useMemo(() => {
         const profileKeys = Object.keys(activeProfile || {}).filter((key) => key !== 'id');
-        const orderedKeys = FIELD_ORDER.filter((key) => profileKeys.includes(key));
-        const remainingKeys = profileKeys.filter((key) => !FIELD_ORDER.includes(key));
-        return [...orderedKeys, ...remainingKeys];
+        return FIELD_ORDER.filter((key) => profileKeys.includes(key));
     }, [activeProfile]);
 
     const openConsole = React.useCallback(() => {
-        setDraftValues({ ...(activeProfile || {}) });
+        const nextDraftValues = editableKeys.reduce((result, fieldKey) => {
+            result[fieldKey] = activeProfile?.[fieldKey] ?? '';
+            return result;
+        }, {});
+
+        setDraftValues(nextDraftValues);
+        setValidationErrors({});
         setSaveMessage('');
         setSaveError('');
         setIsConsoleOpen(true);
-    }, [activeProfile]);
+    }, [activeProfile, editableKeys]);
 
     const closeConsole = React.useCallback(() => {
         setIsConsoleOpen(false);
+        setValidationErrors({});
         setSaveMessage('');
         setSaveError('');
     }, []);
@@ -116,6 +138,15 @@ const Footer = () => {
             ...current,
             [fieldKey]: nextValue
         }));
+        setValidationErrors((current) => {
+            if (!current[fieldKey]) {
+                return current;
+            }
+
+            const nextErrors = { ...current };
+            delete nextErrors[fieldKey];
+            return nextErrors;
+        });
     }, []);
 
     const handleSave = React.useCallback(async () => {
@@ -123,7 +154,16 @@ const Footer = () => {
             return;
         }
 
+        const nextValidationErrors = validateDraftValues(draftValues, activeProfileId);
+        if (Object.keys(nextValidationErrors).length > 0) {
+            setValidationErrors(nextValidationErrors);
+            setSaveMessage('');
+            setSaveError('Resolve the validation errors before saving.');
+            return;
+        }
+
         setIsSaving(true);
+        setValidationErrors({});
         setSaveMessage('');
         setSaveError('');
 
@@ -145,7 +185,7 @@ const Footer = () => {
 
         setSaveMessage('Profile values updated.');
         setIsSaving(false);
-    }, [activeProfile, draftValues, editableKeys, updateActiveProfile]);
+    }, [activeProfile, activeProfileId, draftValues, editableKeys, updateActiveProfile]);
 
     return (
         <div className="box">
@@ -158,7 +198,7 @@ const Footer = () => {
                     </div>
                     <div className="column footer-console-column">
                         <p className="heading">Profile Admin</p>
-                        <p className="footer-info">Edit the active profile values directly.</p>
+                        <p className="footer-info">Edit admin-managed profile values directly.</p>
                         <button type="button" className="footer-console-button" onClick={openConsole}>
                             Open Admin Console
                         </button>
@@ -196,6 +236,7 @@ const Footer = () => {
                                 const currentValue = activeProfile?.[fieldKey];
                                 const draftValue = draftValues[fieldKey];
                                 const label = labelForField(fieldKey);
+                                const fieldError = validationErrors[fieldKey];
 
                                 if (typeof currentValue === 'boolean') {
                                     return (
@@ -208,44 +249,14 @@ const Footer = () => {
                                                 <option value="true">Required / True</option>
                                                 <option value="false">Complete / False</option>
                                             </select>
-                                        </label>
-                                    );
-                                }
-
-                                if (fieldKey === 'dentalTier' || fieldKey === 'visionTier') {
-                                    return (
-                                        <label className="footer-field" key={fieldKey}>
-                                            <span>{label}</span>
-                                            <select
-                                                value={draftValue ?? 'none'}
-                                                onChange={(event) => handleFieldChange(fieldKey, event.target.value)}
-                                            >
-                                                {BENEFIT_TIER_OPTIONS.map((option) => (
-                                                    <option key={option} value={option}>
-                                                        {option}
-                                                    </option>
-                                                ))}
-                                            </select>
-                                        </label>
-                                    );
-                                }
-
-                                if (fieldKey === 'homeAddress') {
-                                    return (
-                                        <label className="footer-field footer-field-wide" key={fieldKey}>
-                                            <span>{label}</span>
-                                            <textarea
-                                                value={draftValue ?? ''}
-                                                onChange={(event) => handleFieldChange(fieldKey, event.target.value)}
-                                                rows={3}
-                                            />
+                                            {fieldError && <span className="footer-field-error">{fieldError}</span>}
                                         </label>
                                     );
                                 }
 
                                 const inputType = fieldKey === 'password'
                                     ? 'password'
-                                    : (typeof currentValue === 'number' ? 'number' : 'text');
+                                    : (fieldKey === 'email' ? 'email' : (typeof currentValue === 'number' ? 'number' : 'text'));
 
                                 return (
                                     <label className="footer-field" key={fieldKey}>
@@ -256,6 +267,7 @@ const Footer = () => {
                                             value={draftValue ?? ''}
                                             onChange={(event) => handleFieldChange(fieldKey, event.target.value)}
                                         />
+                                        {fieldError && <span className="footer-field-error">{fieldError}</span>}
                                     </label>
                                 );
                             })}

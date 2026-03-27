@@ -166,6 +166,13 @@
     font-weight: 700;
 }
 
+.footer-field-error {
+    color: #a12222;
+    font-size: 0.82rem;
+    font-weight: 600;
+    line-height: 1.35;
+}
+
 .footer-field input,
 .footer-field select,
 .footer-field textarea {
