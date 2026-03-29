@@ -5,13 +5,13 @@ import './css/pageHelpBubble.css';
 const PAGE_HELP_CONTENT = {
   '/': {
     title: 'Login',
-    summary: 'This page authenticates the user and sets the active employee profile for the session.',
-    hcmUse: 'Modern HCM platforms use sign-in to personalize dashboards, protect employee records, and control access to payroll, time, benefits, and training data.'
+    summary: 'This page authenticates the user and sets the active employee profile for the session. There are 2 profiles in this demo: Default and John Worker. Enter "guest1" into both fields to log into the John Worker profile. You can always get back to the Default profile by hitting "Logout" on the top right on the page.',
+    hcmUse: 'Modern HCM platforms use sign-in to personalize dashboards, protect employee records, and control access to payroll, time, benefits, and training data. Remember to enable Two-Factor Authentication if given the option.'
   },
   '/login': {
     title: 'Login',
-    summary: 'This page authenticates the user and sets the active employee profile for the session.',
-    hcmUse: 'Modern HCM platforms use sign-in to personalize dashboards, protect employee records, and control access to payroll, time, benefits, and training data.'
+    summary: 'This page authenticates the user and sets the active employee profile for the session. There are 2 profiles in this demo: Default and John Worker. Enter "guest1" into both fields to log into the John Worker profile. You can always get back to the Default profile by hitting "Logout" on the top right on the page.',
+    hcmUse: 'Modern HCM platforms use sign-in to personalize dashboards, protect employee records, and control access to payroll, time, benefits, and training data. Remember to enable Two-Factor Authentication if given the option.'
   },
   '/dashboard': {
     title: 'Dashboard',
@@ -20,7 +20,7 @@ const PAGE_HELP_CONTENT = {
   },
   '/time': {
     title: 'Time',
-    summary: 'This page is used to clock in, clock out, and review worked hours by week.',
+    summary: 'This page is used to clock in, clock out, and review previously worked hours by week.',
     hcmUse: 'Time modules in modern HCM suites capture labor hours, feed payroll calculations, support attendance tracking, and provide managers with audit-ready work records.'
   },
   '/payroll': {
@@ -30,22 +30,22 @@ const PAGE_HELP_CONTENT = {
   },
   '/absence': {
     title: 'Absence',
-    summary: 'This page lets the user request time away from work while checking available leave balances.',
+    summary: 'This page lets the user request time away from work while checking available leave balances. Click the start and ending date to highlight the time you want to request off, then click "Submit Request." Each day counts for 8 hours. There may be cases where you may need to email your direct supervisor and they will manually deduct your hours after approving your time off.',
     hcmUse: 'Absence management in modern HCMs tracks accruals, validates leave requests, and gives managers a structured workflow for scheduling and coverage decisions.'
   },
   '/benefits': {
     title: 'Benefits',
-    summary: 'This page shows benefit elections and lets the employee choose coverage tiers.',
+    summary: 'This page shows benefit elections and lets the employee choose coverage tiers. Each company offers different benefits, so it\'s in your best interest to know what they offer and make the most of it.',
     hcmUse: 'Benefits self-service is a core HCM function because it reduces manual HR administration and lets employees manage deductions and elections directly.'
   },
   '/training': {
     title: 'Training',
-    summary: 'This page assigns required learning modules, plays training content, and checks completion with quizzes.',
+    summary: 'This page assigns required learning modules, plays training content, and checks completion with quizzes. In most cases, the company will disable your ability to scrub the video to ensure that you have watched the entire training video. You will then need to pass a quiz for the training to be completed. You can open the Admin Console below to put the Finished Modules back into the Required Modules.',
     hcmUse: 'Learning and compliance modules in modern HCMs help organizations document required training, reduce risk, and maintain a record of employee completion status.'
   },
   '/info': {
     title: 'Personal Info',
-    summary: 'This page displays and manages employee profile details such as contact, emergency, and employment information. If on the Default profile, just click \'OK\' to edit the profile info.',
+    summary: 'This page displays and manages employee profile details such as contact, emergency, and employment information. To edit the profile, click on "View Info", then "Edit Info". If on the Default profile, just click "OK". If on John\'s profile, enter "guest1" and click "OK."',
     hcmUse: 'Employee self-service records are standard in modern HCMs because they keep data current and reduce administrative updates for HR staff.'
   }
 };

@@ -44,7 +44,7 @@
     "ladderTraining": true,
     "knifeSafetyTraining": true,
     "storeCredit": 1,
-    "accruedTimeOff": 8,
+    "accruedTimeOff": 8.6,
     "paidSickLeave": 32,
     "dentalTier": "gold",
     "visionTier": "silver"
