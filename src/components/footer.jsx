@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useProfile } from "./profiles/profileContext.jsx";
+import { isHostedDemoMode, resetDemoDataToBundled } from "./profiles/dataStore.js";
 
 import './css/footer.css';
 
@@ -101,6 +102,7 @@ function validateDraftValues(draftValues, activeProfileId) {
 
 const Footer = () => {
     const { activeProfile, activeProfileId, updateActiveProfile } = useProfile();
+    const isHostedDemo = isHostedDemoMode();
     const [isConsoleOpen, setIsConsoleOpen] = React.useState(false);
     const [draftValues, setDraftValues] = React.useState({});
     const [isSaving, setIsSaving] = React.useState(false);
@@ -187,6 +189,16 @@ const Footer = () => {
         setIsSaving(false);
     }, [activeProfile, activeProfileId, draftValues, editableKeys, updateActiveProfile]);
 
+    const handleResetDemoData = React.useCallback(() => {
+        const confirmed = window.confirm('Reset hosted demo data to the bundled JSON files? This will clear local demo edits and active clock sessions in this browser.');
+        if (!confirmed) {
+            return;
+        }
+
+        resetDemoDataToBundled();
+        window.location.reload();
+    }, []);
+
     return (
         <div className="box">
             <div className="footer-container">
@@ -202,6 +214,11 @@ const Footer = () => {
                         <button type="button" className="footer-console-button" onClick={openConsole}>
                             Open Admin Console
                         </button>
+                        {isHostedDemo && (
+                            <button type="button" className="footer-demo-reset-button" onClick={handleResetDemoData}>
+                                Reset Demo Data
+                            </button>
+                        )}
                     </div>
                 </div>
             </div>
@@ -274,6 +291,11 @@ const Footer = () => {
                         </div>
 
                         <div className="footer-modal-actions">
+                            {isHostedDemo && (
+                                <button type="button" className="footer-demo-reset-button" onClick={handleResetDemoData}>
+                                    Reset Demo Data
+                                </button>
+                            )}
                             <button type="button" className="footer-modal-secondary" onClick={closeConsole}>
                                 Cancel
                             </button>
