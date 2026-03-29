@@ -291,11 +291,6 @@ const Footer = () => {
                         </div>
 
                         <div className="footer-modal-actions">
-                            {isHostedDemo && (
-                                <button type="button" className="footer-demo-reset-button" onClick={handleResetDemoData}>
-                                    Reset Demo Data
-                                </button>
-                            )}
                             <button type="button" className="footer-modal-secondary" onClick={closeConsole}>
                                 Cancel
                             </button>
