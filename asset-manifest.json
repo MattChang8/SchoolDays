@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/SchoolDays/static/css/main.afc33638.css",
-    "main.js": "/SchoolDays/static/js/main.69db5d30.js",
+    "main.js": "/SchoolDays/static/js/main.d83172e5.js",
     "static/js/453.04c4859e.chunk.js": "/SchoolDays/static/js/453.04c4859e.chunk.js",
     "static/media/SchoolDayLogo.png": "/SchoolDays/static/media/SchoolDayLogo.f6ede926a8fec0877409.png",
     "index.html": "/SchoolDays/index.html",
     "main.afc33638.css.map": "/SchoolDays/static/css/main.afc33638.css.map",
-    "main.69db5d30.js.map": "/SchoolDays/static/js/main.69db5d30.js.map",
+    "main.d83172e5.js.map": "/SchoolDays/static/js/main.d83172e5.js.map",
     "453.04c4859e.chunk.js.map": "/SchoolDays/static/js/453.04c4859e.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.afc33638.css",
-    "static/js/main.69db5d30.js"
+    "static/js/main.d83172e5.js"
   ]
 }
