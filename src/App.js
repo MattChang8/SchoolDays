@@ -5,6 +5,7 @@ import Footer from './components/footer.jsx';
 import SideMenu from './components/sideMenu.jsx';
 import PageHelpBubble from './components/pageHelpBubble.jsx';
 import { ProfileProvider } from './components/profiles/profileContext.jsx';
+import { CVIProvider } from './components/cvi/components/cvi-provider';
 
 function App() {
     <style>
@@ -17,6 +18,7 @@ function App() {
 		<ProfileProvider>
 			<Header />
 			<SideMenu />
+			<CVIProvider/>
 			<PageHelpBubble />
 			<Footer />
 		</ProfileProvider>

@@ -1,16 +1,32 @@
 import '../components/css/info.css';
 import '../components/css/workday.css'
+import { Conversation } from '../components/cvi/components/conversation';
 
-export function Test(){
+export function Test() {
 
-
-    return (
+  const handleLeave = () => {
+    //handle leave
+  }
+  
+  return (
     <>
-        <style>
+      <style>
         @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
-        </style>
+      </style>
 
-        <h2>TEST</h2>
-      </>
-    )
+      <div
+        style={{
+          width: '90%',
+          height: '90%',
+          maxWidth: '1200px',
+          margin: '10px auto',
+        }}
+      >
+        <Conversation
+          conversationUrl='YOUR_TAVUS_MEETING_URL'
+          onLeave={handleLeave}
+        />
+      </div>
+    </>
+  )
 }
