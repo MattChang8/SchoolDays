@@ -23,7 +23,7 @@ export function Test() {
         }}
       >
         <Conversation
-          conversationUrl='YOUR_TAVUS_MEETING_URL'
+          conversationUrl='https://tavus.daily.co/c244ad817c3c041a'
           onLeave={handleLeave}
         />
       </div>
