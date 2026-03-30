@@ -1,6 +1,5 @@
 import defaultProfiles from './profiles.json';
 import defaultTimesheet from './timesheet.json';
-import { buildApiUrl } from './api.js';
 
 const PROFILE_STORAGE_KEY = 'schooldays.demo.profiles';
 const TIMESHEET_STORAGE_KEY = 'schooldays.demo.timesheet';
@@ -204,7 +203,7 @@ export async function fetchProfilesData() {
   }
 
   try {
-    const response = await fetch(buildApiUrl('/api/profiles'));
+    const response = await fetch('/api/profiles');
     if (!response.ok) {
       throw new Error('Profile API unavailable');
     }
@@ -232,7 +231,7 @@ export async function updateProfileData(profileId, { updates, currentPassword })
   }
 
   try {
-    const response = await fetch(buildApiUrl(`/api/profiles/${profileId}`), {
+    const response = await fetch(`/api/profiles/${profileId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
@@ -269,7 +268,7 @@ export async function fetchTimesheetData() {
   }
 
   try {
-    const response = await fetch(buildApiUrl('/api/timesheet'));
+    const response = await fetch('/api/timesheet');
     if (!response.ok) {
       throw new Error('Timesheet API unavailable');
     }
@@ -297,7 +296,7 @@ export async function appendTimesheetHours(profileId, { dateKey, hoursToAdd }) {
   }
 
   try {
-    const response = await fetch(buildApiUrl(`/api/timesheet/${profileId}`), {
+    const response = await fetch(`/api/timesheet/${profileId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'

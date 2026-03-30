@@ -10,7 +10,6 @@ import { Payroll } from '../pages/payroll.jsx';
 import { Absence } from '../pages/absence.tsx';
 import { Info } from '../pages/info.jsx';
 import { Training } from '../pages/training.jsx';
-import { Test } from '../pages/test.jsx';
 import '../components/css/workday.css';
 import '../components/css/sideMenu.css';
 import DashIcon from './images/wd-accent-dashboard.png';
@@ -41,7 +40,6 @@ return(
         <MenuItem component={<Link to='/benefits' />} icon={<img className='' src={ShieldBenefits} alt='SMBenefits'/>}> &nbsp;Benefits </MenuItem>
         <MenuItem component={<Link to='/training' />} icon={<img className='' src={OpenBook} alt='SMTraining'/>}> &nbsp;Training </MenuItem>
         <MenuItem component={<Link to='/info' />} icon={<img className='' src={Person} alt='SMInfo'/>}> &nbsp;Personal Info </MenuItem>
-        <MenuItem component={<Link to='/test' />} icon={<img className='' src={Person} alt='test'/>}> &nbsp;Test </MenuItem>
       </Menu>
     </Sidebar>
 
@@ -57,7 +55,6 @@ return(
             <Route path="/benefits" element={<Benefits />} />
             <Route path="/training" element={<Training />} />
             <Route path="/info" element={<Info />} />
-            <Route path="/test" element={<Test />} />
         </Routes> 
     </main>
   </div>
