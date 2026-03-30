@@ -90,7 +90,7 @@ const MainVideo = React.memo(() => {
 	);
 });
 
-export const Conversation = React.memo(({ onLeave, conversationUrl }) => {
+export const Conversation = React.memo(({ onLeave, conversationUrl, meetingToken }) => {
 	const { joinCall, leaveCall } = useCVICall();
 	const meetingState = useMeetingState();
 	const { hasMicError } = useDevices();
@@ -103,8 +103,12 @@ export const Conversation = React.memo(({ onLeave, conversationUrl }) => {
 
 	// Initialize call when conversation is available
 	useEffect(() => {
-		joinCall({ url: conversationUrl });
-	}, []);
+		if (!conversationUrl) {
+			return;
+		}
+
+		joinCall({ url: conversationUrl, token: meetingToken });
+	}, [conversationUrl, meetingToken, joinCall]);
 
 	const handleLeave = useCallback(() => {
 		leaveCall();

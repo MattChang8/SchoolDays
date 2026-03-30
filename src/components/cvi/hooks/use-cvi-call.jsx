@@ -5,9 +5,10 @@ export const useCVICall = () => {
 	const daily = useDaily();
 
 	const joinCall = useCallback(
-		({ url }) => {
+		({ url, token }) => {
 			daily?.join({
-				url: url,
+				url,
+				token: token || undefined,
 				inputSettings: {
 					audio: {
 						processor: {

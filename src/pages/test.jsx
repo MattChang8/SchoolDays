@@ -1,12 +1,55 @@
 import '../components/css/info.css';
 import '../components/css/workday.css'
+import React from 'react';
 import { Conversation } from '../components/cvi/components/conversation';
+import { buildApiUrl } from '../components/profiles/api.js';
 
 export function Test() {
+  const [conversationUrl, setConversationUrl] = React.useState('');
+  const [meetingToken, setMeetingToken] = React.useState('');
+  const [statusMessage, setStatusMessage] = React.useState('');
+  const [errorMessage, setErrorMessage] = React.useState('');
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const handleLeave = () => {
-    //handle leave
-  }
+    setConversationUrl('');
+    setMeetingToken('');
+    setStatusMessage('Conversation ended.');
+  };
+
+  const handleStartConversation = async () => {
+    setIsLoading(true);
+    setErrorMessage('');
+    setStatusMessage('Creating Tavus conversation...');
+
+    try {
+      const response = await fetch(buildApiUrl('/api/tavus/conversation'), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({})
+      });
+
+      const payload = await response.json();
+
+      if (!response.ok) {
+        setErrorMessage(payload?.error || 'Failed to create Tavus conversation.');
+        setStatusMessage('');
+        setIsLoading(false);
+        return;
+      }
+
+      setConversationUrl(payload.conversationUrl || '');
+      setMeetingToken(payload.meetingToken || '');
+      setStatusMessage(`Conversation created (${payload.status || 'unknown status'}). Joining room...`);
+    } catch (error) {
+      setErrorMessage('Could not reach the Tavus conversation service.');
+      setStatusMessage('');
+    } finally {
+      setIsLoading(false);
+    }
+  };
   
   return (
     <>
@@ -22,10 +65,24 @@ export function Test() {
           margin: '10px auto',
         }}
       >
-        <Conversation
-          conversationUrl='https://tavus.daily.co/c244ad817c3c041a'
-          onLeave={handleLeave}
-        />
+        {!conversationUrl && (
+          <div style={{ marginBottom: '1rem' }}>
+            <button type="button" onClick={handleStartConversation} disabled={isLoading}>
+              {isLoading ? 'Starting...' : 'Start Tavus Conversation'}
+            </button>
+          </div>
+        )}
+
+        {statusMessage && <p>{statusMessage}</p>}
+        {errorMessage && <p style={{ color: '#b00020', fontWeight: 700 }}>{errorMessage}</p>}
+
+        {conversationUrl && (
+          <Conversation
+            conversationUrl={conversationUrl}
+            meetingToken={meetingToken}
+            onLeave={handleLeave}
+          />
+        )}
       </div>
     </>
   )

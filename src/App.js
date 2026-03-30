@@ -17,8 +17,9 @@ function App() {
 		<meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
 		<ProfileProvider>
 			<Header />
-			<SideMenu />
-			<CVIProvider/>
+			<CVIProvider>
+				<SideMenu />
+			</CVIProvider>
 			<PageHelpBubble />
 			<Footer />
 		</ProfileProvider>
