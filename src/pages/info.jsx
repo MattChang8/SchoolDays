@@ -64,11 +64,14 @@ export function Info(){
     const { activeProfile, updateActiveProfile } = useProfile();
     const [isInfoOpen, setIsInfoOpen] = React.useState(false);
     const [isEditing, setIsEditing] = React.useState(false);
+    const [isPasswordPromptOpen, setIsPasswordPromptOpen] = React.useState(false);
+    const [passwordPromptValue, setPasswordPromptValue] = React.useState('');
     const [editValues, setEditValues] = React.useState({});
     const [confirmedPassword, setConfirmedPassword] = React.useState('');
     const [editError, setEditError] = React.useState('');
     const [isSaving, setIsSaving] = React.useState(false);
     const [validationErrors, setValidationErrors] = React.useState({});
+    const passwordInputRef = React.useRef(null);
 
     const displayName = activeProfile
         ? [activeProfile.firstName, activeProfile.lastName].filter(Boolean).join(' ')
@@ -98,27 +101,43 @@ export function Info(){
     const closeInfo = () => {
         setIsInfoOpen(false);
         setIsEditing(false);
+        setIsPasswordPromptOpen(false);
+        setPasswordPromptValue('');
         setConfirmedPassword('');
         setEditError('');
         setValidationErrors({});
     };
 
     const handleStartEdit = () => {
-        const enteredPassword = window.prompt('Enter your current password to edit profile info:');
-        if (enteredPassword === null) {
-            return;
-        }
+        setPasswordPromptValue('');
+        setEditError('');
+        setIsPasswordPromptOpen(true);
+    };
 
-        if (enteredPassword !== (activeProfile?.password || '')) {
+    const handleConfirmPasswordPrompt = () => {
+        if (passwordPromptValue !== (activeProfile?.password || '')) {
             setEditError('Incorrect password. Please contact IT to reset your password.');
             return;
         }
 
-        setConfirmedPassword(enteredPassword);
+        setConfirmedPassword(passwordPromptValue);
+        setPasswordPromptValue('');
+        setIsPasswordPromptOpen(false);
         setEditError('');
         setValidationErrors({});
         setIsEditing(true);
     };
+
+    const handleCancelPasswordPrompt = () => {
+        setIsPasswordPromptOpen(false);
+        setPasswordPromptValue('');
+    };
+
+    React.useEffect(() => {
+        if (isPasswordPromptOpen) {
+            passwordInputRef.current?.focus();
+        }
+    }, [isPasswordPromptOpen]);
 
     const handleFieldChange = (event) => {
         const { name, value } = event.target;
@@ -196,6 +215,33 @@ export function Info(){
                     <h className='mediumHeading'>Profile Details</h>
 
                     {editError && <p className='errorText'>{editError}</p>}
+
+                    {isPasswordPromptOpen && (
+                        <div className='passwordPromptOverlay'>
+                            <div className='passwordPromptBox'>
+                                <p className='passwordPromptTitle'>Confirm Password</p>
+                                <p className='passwordPromptText'>Enter your current password to edit profile info.</p>
+                                <input
+                                    ref={passwordInputRef}
+                                    type='password'
+                                    value={passwordPromptValue}
+                                    onChange={(event) => setPasswordPromptValue(event.target.value)}
+                                    onKeyDown={(event) => {
+                                        if (event.key === 'Enter') {
+                                            handleConfirmPasswordPrompt();
+                                        }
+                                        if (event.key === 'Escape') {
+                                            handleCancelPasswordPrompt();
+                                        }
+                                    }}
+                                />
+                                <div className='passwordPromptActions'>
+                                    <button onClick={handleConfirmPasswordPrompt}>Confirm</button>
+                                    <button onClick={handleCancelPasswordPrompt}>Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
 
                     {!isEditing && (
                         <>

@@ -17,6 +17,7 @@
     background-color: #fafafa;
     font-family: Roboto;
     font-weight: 400;
+    position: relative;
 }
 
 .profileInfoActions {
@@ -53,6 +54,50 @@
     font-size: 0.82rem;
     font-weight: 600;
     line-height: 1.35;
+}
+
+.passwordPromptOverlay {
+    align-items: center;
+    background: rgba(15, 23, 42, 0.35);
+    border-radius: 8px;
+    display: flex;
+    inset: 0;
+    justify-content: center;
+    position: absolute;
+    z-index: 5;
+}
+
+.passwordPromptBox {
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 14px 36px rgba(15, 23, 42, 0.18);
+    max-width: 320px;
+    padding: 1rem;
+    width: 100%;
+}
+
+.passwordPromptTitle {
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0 0 0.4rem;
+}
+
+.passwordPromptText {
+    font-size: 0.9rem;
+    margin: 0 0 0.75rem;
+}
+
+.passwordPromptBox input {
+    box-sizing: border-box;
+    margin-bottom: 0.75rem;
+    padding: 0.5rem 0.6rem;
+    width: 100%;
+}
+
+.passwordPromptActions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
 }
 
 @media (max-width: 768px) {

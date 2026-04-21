@@ -36,8 +36,8 @@ return(
         <MenuItem component={<Link to='/dashboard' />} icon={<img className='' src={DashIcon} alt='SMDash'/>}> 	&nbsp;Dashboard</MenuItem>
         <MenuItem component={<Link to='/time' />} icon={<img className='' src={TimeClock} alt='SMTime'/>}> &nbsp;Time </MenuItem>
         <MenuItem component={<Link to='/payroll' />} icon={<img className='' src={HandMoney} alt='SMPay'/>}> &nbsp;Payroll </MenuItem>
-        <MenuItem component={<Link to='/absence' />} icon={<img className='' src={Suitcase} alt='SMAbsence'/>}> &nbsp;Absence </MenuItem>
         <MenuItem component={<Link to='/benefits' />} icon={<img className='' src={ShieldBenefits} alt='SMBenefits'/>}> &nbsp;Benefits </MenuItem>
+        <MenuItem component={<Link to='/absence' />} icon={<img className='' src={Suitcase} alt='SMAbsence'/>}> &nbsp;Absence </MenuItem>
         <MenuItem component={<Link to='/training' />} icon={<img className='' src={OpenBook} alt='SMTraining'/>}> &nbsp;Training </MenuItem>
         <MenuItem component={<Link to='/info' />} icon={<img className='' src={Person} alt='SMInfo'/>}> &nbsp;Personal Info </MenuItem>
       </Menu>
